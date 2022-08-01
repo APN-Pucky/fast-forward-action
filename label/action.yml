@@ -27,7 +27,7 @@ runs:
         with:
           labels: fast-forward
       - uses: actions-ecosystem/action-remove-labels@v1
-        if: env.FFL == 'true' && ${{ github.event_name == 'pull_request' }}
+        if: env.FFL == 'true' 
         with:
           labels: "PR: needs rebase"
       - uses: actions-ecosystem/action-remove-labels@v1
