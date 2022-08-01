@@ -26,6 +26,15 @@ runs:
         with:
           fetch-depth: 0
       # Basic use case example
+      - uses: ./label
+        if: ${{ github.event_name == 'pull_request' }} 
+      - name: check if prs are dirty
+        uses: eps1lon/actions-label-merge-conflict@releases/2.x
+        with:
+          dirtyLabel: "PR: needs rebase"
+          removeOnDirtyLabel: "fast-forward"
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
       - name: Fast Forward PR
         if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/fast-forward') 
         id: ff-action
@@ -36,33 +45,7 @@ runs:
           failure_message: 'Failed! Cannot do fast forward!'
           - run: git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
       - run: git fetch origin ${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}
-      - run: |
-          if [[ $(git merge-base --is-ancestor ${{ github.event.pull_request.base.ref }}  ${{ github.event.pull_request.head.ref }}) ]]; then
-            echo "FFL=false" >> "$GITHUB_ENV"
-          else
-            echo "FFL=true" >> "$GITHUB_ENV"
-          fi
-          # TODO if the run only pullrequest
-      - uses: actions-ecosystem/action-add-labels@v1
-        if: env.FFL == 'true' 
-        with:
-          labels: fast-forward
-      - uses: actions-ecosystem/action-remove-labels@v1
-        if: env.FFL == 'true' 
-        with:
-          labels: "PR: needs rebase"
-      - uses: actions-ecosystem/action-remove-labels@v1
-        if: env.FFL == 'false' 
-        with:
-          labels: fast-forward
-      - uses: mshick/add-pr-comment@v1
-        if: env.FFL == 'true' 
-        with:
-          message: |
-            Hurray, this PR is `/fast-forward`-able (as long as the label remains)
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
-          allow-repeats: false # This is the default
+
 # TODO
 #branding:
 #  icon: 'git-merge'  
