@@ -11,6 +11,7 @@ runs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - run: git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
       - run: git fetch origin ${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}
       - run: |
           if [[ $(git merge-base --is-ancestor ${{ github.event.pull_request.base.ref }}  ${{ github.event.pull_request.head.ref }}) ]]; then
