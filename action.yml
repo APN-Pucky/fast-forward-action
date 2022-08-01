@@ -6,15 +6,15 @@ inputs:
 runs:
   using: "composite"
   steps:  
-      - uses: ./label
-        if: ${{ github.event_name == 'pull_request' }}
-        with:
-          GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       # To use this repository's private action, you must check out the repository
       - name: Checkout code into workspace directory
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - uses: APN-Pucky/fast-forward.action/label@main
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       - name: check if prs are dirty
         uses: APN-Pucky/actions-label-merge-conflict@main
         with:
