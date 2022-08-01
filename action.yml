@@ -1,0 +1,69 @@
+name: 'Fast Forward'
+description: 'Merge pull request using fast forward only, if possible, moving base branch (target branch) to head branch (source branch)'
+inputs:
+  GITHUB_TOKEN:
+    description: 'Automatically provided token, that can be used to authenticate on behalf of the GitHub action, with permissions limited to the repository that contains your workflow'
+  success_message:
+    description: 'Generic success message, will be commented on the pull request, if pull-request fast forward succeeds.'
+  failure_message:
+    description: 'Generic failure message, Will be commented on the pull request, if pull-request fast forward fails.'
+  update_status:
+    description: 'Optional, if true, the status API is used to set failure or success as a state for the commit, which can be used to gate merging. Default value is false.'
+  failure_message_same_stage_and_prod:
+    description: 'Optional, failure message, when pull-request fast forward fails, and staging branch equals production branch'
+  failure_message_diff_stage_and_prod:
+    description: 'Optional, failure message, when pull-request fast forward fails, and staging branch and production branch are at different commits'
+  production_branch:
+    description: 'Optional, production branch name. Default value is master.'
+  staging_branch:
+    description: 'Optional, staging or preproduction branch name. Default value is staging.'
+runs:
+  using: "composite"
+  steps:  
+      # To use this repository's private action, you must check out the repository
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      # Basic use case example
+      - name: Fast Forward PR
+        if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/fast-forward') 
+        id: ff-action
+        uses: APN-Pucky/fast-forward-js-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          success_message: 'Success! Fast forwarded ***target_base*** to ***source_head***! ```git checkout target_base && git merge source_head --ff-only``` '
+          failure_message: 'Failed! Cannot do fast forward!'
+          - run: git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
+      - run: git fetch origin ${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}
+      - run: |
+          if [[ $(git merge-base --is-ancestor ${{ github.event.pull_request.base.ref }}  ${{ github.event.pull_request.head.ref }}) ]]; then
+            echo "FFL=false" >> "$GITHUB_ENV"
+          else
+            echo "FFL=true" >> "$GITHUB_ENV"
+          fi
+          # TODO if the run only pullrequest
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: env.FFL == 'true' 
+        with:
+          labels: fast-forward
+      - uses: actions-ecosystem/action-remove-labels@v1
+        if: env.FFL == 'true' 
+        with:
+          labels: "PR: needs rebase"
+      - uses: actions-ecosystem/action-remove-labels@v1
+        if: env.FFL == 'false' 
+        with:
+          labels: fast-forward
+      - uses: mshick/add-pr-comment@v1
+        if: env.FFL == 'true' 
+        with:
+          message: |
+            Hurray, this PR is `/fast-forward`-able (as long as the label remains)
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
+          allow-repeats: false # This is the default
+# TODO
+#branding:
+#  icon: 'git-merge'  
+#  color: 'green'
