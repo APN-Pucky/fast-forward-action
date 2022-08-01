@@ -17,7 +17,7 @@ runs:
         with:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       - name: check if prs are dirty
-        uses: eps1lon/actions-label-merge-conflict@releases/2.x
+        uses: APN-Pucky/actions-label-merge-conflict@main
         with:
           dirtyLabel: "PR: needs rebase"
           removeOnDirtyLabel: "fast-forward"
