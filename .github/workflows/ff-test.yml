@@ -15,4 +15,4 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: APN-Pucky/fast-forward-action@master
+      - uses: APN-Pucky/fast-forward-action@main
