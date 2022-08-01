@@ -11,7 +11,7 @@ runs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: APN-Pucky/fast-forward.action/label@main
+      - uses: APN-Pucky/fast-forward-action/label@main
         if: ${{ github.event_name == 'pull_request' }}
         with:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
