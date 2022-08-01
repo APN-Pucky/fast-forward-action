@@ -1,5 +1,9 @@
 name: 'Fast Forward Label'
 description: 'Label fast forwardable stuff'
+inputs:
+  GITHUB_TOKEN:
+    description: 'Automatically provided token, that can be used to authenticate on behalf of the GitHub action, with permissions limited to the repository that contains your workflow'
+
 runs:
   using: "composite"
   steps:  
@@ -31,6 +35,6 @@ runs:
         with:
           message: |
             Hurray, this PR is `/fast-forward`-able (as long as the label remains)
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ inputs.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
           allow-repeats: false # This is the default
