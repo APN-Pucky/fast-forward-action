@@ -1,5 +1,5 @@
 name: 'Fast Forward Label'
-description: 'Label fast forwardable stuff'
+description: 'Label fast forwardable on PR'
 inputs:
   GITHUB_TOKEN:
     description: 'Automatically provided token, that can be used to authenticate on behalf of the GitHub action, with permissions limited to the repository that contains your workflow'
