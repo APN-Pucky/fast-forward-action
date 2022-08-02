@@ -16,7 +16,7 @@ runs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ssh-key: ${{ intput.SSH_PRIVATE_KEY }}
+          ssh-key: ${{ inputs.SSH_PRIVATE_KEY }}
           persist-credentials: true
       - name: Fast Forward PR
         id: ffaction
