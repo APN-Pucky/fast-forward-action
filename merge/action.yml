@@ -28,7 +28,7 @@ runs:
       - name: FF Merge
         run: |
           git checkout ${{ steps.ffaction.outputs.ffbase }}
-          git merge --ff-only ${{ steps.ffaction.outputs.ffbase }} ${{ steps.ffaction.outputs.ffhead }}
+          git merge --ff-only ${{ steps.ffaction.outputs.ffbase }} ${{ steps.ffaction.outputs.ffsha }}
         shell: bash
       - name: Push changes
         uses: ad-m/github-push-action@master
