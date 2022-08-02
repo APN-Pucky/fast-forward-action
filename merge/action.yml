@@ -34,12 +34,3 @@ runs:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
           success_message: 'Success! Fast forwarded ***target_base*** to ***source_head***! ```git checkout target_base && git merge source_head --ff-only``` '
           failure_message: 'Failed! Cannot do fast forward!'
-      - name: ff -> ff
-        uses: APN-Pucky/actions-label-merge-conflict@main
-        if: ${{ inputs.PAT }} != '0' # PAT case trigger on push
-        with:
-          dirtyLabel: "FF: needs rebase"
-          branch: ${{ steps.ffaction.outputs.ffbranch }}
-          removeOnDirtyLabel: "fast-forward"
-          repoToken: "${{ inputs.GITHUB_TOKEN }}"
-          commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
