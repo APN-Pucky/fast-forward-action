@@ -17,4 +17,5 @@ jobs:
     steps:
       - uses: APN-Pucky/fast-forward-action@main
         with:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PAT: ${{ secrets.PAT }}
