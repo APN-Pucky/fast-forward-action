@@ -36,7 +36,7 @@ runs:
         uses: APN-Pucky/actions-label-merge-conflict@main
         if: github.event.issue.pull_request == '' || false == contains(github.event.comment.body, '/fast-forward') 
         with:
-          dirtyLabel: "PR: needs rebase"
+          dirtyLabel: "PR: FF needs rebase"
           removeOnDirtyLabel: "fast-forward"
           repoToken: "${{ inputs.GITHUB_TOKEN }}"
           commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
