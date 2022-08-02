@@ -17,7 +17,7 @@ runs:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       - name: Fast Forward PR
         if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/fast-forward') 
-        id: ff-action
+        id: ffaction
         uses: APN-Pucky/fast-forward-js-action@master
         with:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
@@ -28,7 +28,7 @@ runs:
         if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/fast-forward') 
         with:
           dirtyLabel: "FF: needs rebase"
-          branch: ${{ github.event.pull_request.base.ref }}
+          branch: ${{ steps.ffaction.outputs.ffbranch }}
           removeOnDirtyLabel: "fast-forward"
           repoToken: "${{ inputs.GITHUB_TOKEN }}"
           commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
