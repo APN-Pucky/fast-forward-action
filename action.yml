@@ -23,7 +23,7 @@ runs:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
           success_message: 'Success! Fast forwarded ***target_base*** to ***source_head***! ```git checkout target_base && git merge source_head --ff-only``` '
           failure_message: 'Failed! Cannot do fast forward!'
-      - name: check if prs are dirty
+      - name: ff -> ff
         uses: APN-Pucky/actions-label-merge-conflict@main
         if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/fast-forward') 
         with:
@@ -32,7 +32,7 @@ runs:
           removeOnDirtyLabel: "fast-forward"
           repoToken: "${{ inputs.GITHUB_TOKEN }}"
           commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
-      - name: check if prs are dirty
+      - name: push -> clean ff
         uses: APN-Pucky/actions-label-merge-conflict@main
         if: github.event.issue.pull_request == '' || false == contains(github.event.comment.body, '/fast-forward') 
         with:
