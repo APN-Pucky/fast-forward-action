@@ -16,6 +16,8 @@ runs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          persist-credentials: true
       - name: Fast Forward PR
         if: ${{ inputs.PAT }} != '0'
         id: ffaction
