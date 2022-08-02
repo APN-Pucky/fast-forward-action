@@ -26,11 +26,22 @@ runs:
           success_message: 'Success! Fast forwarded ***target_base*** to ***source_head***! ```git checkout target_base && git merge source_head --ff-only``` '
           failure_message: 'Failed! Cannot do fast forward!'
       - name: FF Merge
+        id: ffmerge
         run: |
           git checkout ${{ steps.ffaction.outputs.ffbase }}
           git merge --ff-only ${{ steps.ffaction.outputs.ffbase }} ${{ steps.ffaction.outputs.ffsha }}
-        shell: bash
+        continue-on-error: true
+       shell: bash
+      - uses: mshick/add-pr-comment@v1
+        if: steps.ffmerge.outcome != 'success'
+        with:
+          message: |
+            Fast forward failed (Check action!).
+          repo-token: ${{ inputs.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
+          allow-repeats: false # This is the default
       - name: Push changes
+        if: steps.ffmerge.outcome != 'success'
         uses: ad-m/github-push-action@master
         with:
           ssh: true
