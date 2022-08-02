@@ -3,8 +3,8 @@ description: 'merge fast forwardable on PR'
 inputs:
   GITHUB_TOKEN:
     description: 'Automatically provided token, that can be used to authenticate on behalf of the GitHub action, with permissions limited to the repository that contains your workflow'
-  PAT:
-    description: 'Push with PAT instead of GITHUB_TOKEN.'
+  SSH_PRIVATE_KEY:
+    description: 'deploy key for push'
 
 runs:
   using: "composite"
@@ -16,19 +16,10 @@ runs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-key: ${{ intput.SSH_PRIVATE_KEY }}
           persist-credentials: true
       - name: Fast Forward PR
-        if: ${{ inputs.PAT }} != '0'
         id: ffaction
-        uses: APN-Pucky/fast-forward-js-action@master
-        with:
-          GITHUB_TOKEN: ${{ inputs.PAT }}
-          success_message: 'Success! Fast forwarded ***target_base*** to ***source_head***! ```git checkout target_base && git merge source_head --ff-only``` '
-          failure_message: 'Failed! Cannot do fast forward!'
-      - name: Fast Forward PR
-        if: ${{ inputs.PAT }} == '0'
-        id: ffactionPAT
         uses: APN-Pucky/fast-forward-js-action@master
         with:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
