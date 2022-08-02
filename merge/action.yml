@@ -26,7 +26,7 @@ runs:
           failure_message: 'Failed! Cannot do fast forward!'
       - name: Fast Forward PR
         if: ${{ inputs.PAT }} == '0'
-        id: ffaction
+        id: ffactionPAT
         uses: APN-Pucky/fast-forward-js-action@master
         with:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
@@ -34,6 +34,7 @@ runs:
           failure_message: 'Failed! Cannot do fast forward!'
       - name: ff -> ff
         uses: APN-Pucky/actions-label-merge-conflict@main
+        if: ${{ inputs.PAT }} != '0' # PAT case trigger on push
         with:
           dirtyLabel: "FF: needs rebase"
           branch: ${{ steps.ffaction.outputs.ffbranch }}
