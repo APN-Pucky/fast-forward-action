@@ -19,13 +19,13 @@ runs:
         with:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       - uses: APN-Pucky/fast-forward-action/merge@main
-        if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/fast-forward') 
+        if: github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '/fast-forward') 
         with:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
           PAT: ${{ inputs.PAT }}
       - name: push -> clean ff
         uses: APN-Pucky/actions-label-merge-conflict@main
-        if: github.event.issue.pull_request == '' || false == contains(github.event.comment.body, '/fast-forward') 
+        if: github.event.issue.pull_request == '' || false == startsWith(github.event.comment.body, '/fast-forward') 
         with:
           dirtyLabel: "PR: FF needs rebase"
           removeOnDirtyLabel: "fast-forward"
