@@ -24,7 +24,7 @@ runs:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
           SSH_PRIVATE_KEY: ${{ inputs.SSH_PRIVATE_KEY }}
       - name: push -> clean ff
-        uses: APN-Pucky/actions-label-merge-conflict@main
+        uses: APN-Pucky/fast-forward-remove-label@main
         if: github.event.issue.pull_request == '' || false == startsWith(github.event.comment.body, '/fast-forward') || env.FFL == 'false'
         with:
           dirtyLabel: "PR: FF needs rebase"
