@@ -22,6 +22,7 @@ runs:
         run: |
           git checkout ${{ github.event.pull_request.base.ref }} 
           git merge --ff-only ${{ github.event.pull_request.base.ref }} ${{ github.event.pull_request.head.ref }}
+        shell: bash
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
