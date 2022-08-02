@@ -3,8 +3,8 @@ description: 'Merge pull request using fast forward only, if possible, moving ba
 inputs:
   GITHUB_TOKEN:
     description: 'Automatically provided token, that can be used to authenticate on behalf of the GitHub action, with permissions limited to the repository that contains your workflow'
-  PAT:
-    description: 'Push with PAT instead of GITHUB_TOKEN.'
+  SSH_PRIVATE_KEY:
+    description: 'deploy key for push.'
     default: '0'
 runs:
   using: "composite"
@@ -22,7 +22,7 @@ runs:
         if: github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '/fast-forward') 
         with:
           GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-          PAT: ${{ inputs.PAT }}
+          SSH_PRIVATE_KEY: ${{ inputs.SSH_PRIVATE_KEY }}
       - name: push -> clean ff
         uses: APN-Pucky/actions-label-merge-conflict@main
         if: github.event.issue.pull_request == '' || false == startsWith(github.event.comment.body, '/fast-forward') || env.FFL == 'false'
