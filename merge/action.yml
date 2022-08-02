@@ -1,0 +1,31 @@
+name: 'Fast Forward Merge'
+description: 'merge fast forwardable on PR'
+inputs:
+  GITHUB_TOKEN:
+    description: 'Automatically provided token, that can be used to authenticate on behalf of the GitHub action, with permissions limited to the repository that contains your workflow'
+
+runs:
+  using: "composite"
+  steps:  
+      - uses: actions-cool/check-user-permission@v2
+        with:
+          require: 'write'
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Fast Forward PR
+        id: ffaction
+        uses: APN-Pucky/fast-forward-js-action@master
+        with:
+          GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+          success_message: 'Success! Fast forwarded ***target_base*** to ***source_head***! ```git checkout target_base && git merge source_head --ff-only``` '
+          failure_message: 'Failed! Cannot do fast forward!'
+      - name: ff -> ff
+        uses: APN-Pucky/actions-label-merge-conflict@main
+        with:
+          dirtyLabel: "FF: needs rebase"
+          branch: ${{ steps.ffaction.outputs.ffbranch }}
+          removeOnDirtyLabel: "fast-forward"
+          repoToken: "${{ inputs.GITHUB_TOKEN }}"
+          commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
