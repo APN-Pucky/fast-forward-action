@@ -18,20 +18,21 @@ runs:
           fetch-depth: 0
           ssh-key: ${{ inputs.SSH_PRIVATE_KEY }}
           persist-credentials: true
+      - name: Fast Forward PR
+        id: ffaction
+        uses: APN-Pucky/fast-forward-js-action@master
+        with:
+          GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+          success_message: 'Success! Fast forwarded ***target_base*** to ***source_head***! ```git checkout target_base && git merge source_head --ff-only``` '
+          failure_message: 'Failed! Cannot do fast forward!'
       - name: FF Merge
         run: |
-          git checkout ${{ github.event.pull_request.base.ref }} 
-          git merge --ff-only ${{ github.event.pull_request.base.ref }} ${{ github.event.pull_request.head.ref }}
+          git checkout ${{ steps.ffaction.outputs.ffbase }}
+          git merge --ff-only ${{ steps.ffaction.outputs.ffbase }} ${{ steps.ffaction.outputs.ffhead }}
         shell: bash
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
         	ssh: true
-          branch: ${{ github.event.pull_request.base.ref }}
-#      - name: Fast Forward PR
-#        id: ffaction
-#        uses: APN-Pucky/fast-forward-js-action@master
-#        with:
-#          GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-#          success_message: 'Success! Fast forwarded ***target_base*** to ***source_head***! ```git checkout target_base && git merge source_head --ff-only``` '
-#          failure_message: 'Failed! Cannot do fast forward!'
+          branch: ${{ steps.ffaction.outputs.ffbase }}
+
