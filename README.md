@@ -2,6 +2,14 @@
 
 Adds a fast-forward label to PRs and fast-forwards them on `/fast-forward` comment.
 
+## Use case
+
+Github Web UI does not allow fast-forwarding of PRs: 
+
+https://stackoverflow.com/questions/60597400/how-to-do-a-fast-forward-merge-on-github
+
+This disallows a linear commit history with a delayed stable branch.
+
 ## Inputs
 
 | Input      | Description |
