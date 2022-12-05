@@ -1,4 +1,4 @@
-name: 'Fast Forward'
+name: 'Fast Forward Bot'
 description: 'Merge pull request using fast forward only, if possible, moving base branch (target branch) to head branch (source branch)'
 inputs:
   GITHUB_TOKEN:
