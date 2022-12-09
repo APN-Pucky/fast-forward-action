@@ -26,6 +26,7 @@ runs:
         if: env.FFL == 'true' 
         with:
           labels: fast-forward
+          github_token: ${{ inputs.GITHUB_TOKEN }}
       - uses: actions-ecosystem/action-remove-labels@v1
         if: env.FFL == 'false' 
         with:
