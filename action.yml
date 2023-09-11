@@ -14,7 +14,7 @@ runs:
   steps:  
       # To use this repository's private action, you must check out the repository
       - name: Checkout code into workspace directory
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: APN-Pucky/fast-forward-action/label@main
